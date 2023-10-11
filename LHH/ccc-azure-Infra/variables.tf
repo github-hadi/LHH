@@ -81,6 +81,13 @@ variable "img_version" {
   default     = "latest"
   type        = string
 }
+variable "os_disk_name" {
+  description = "Optional name of the OS disk to create for the virtual machine. If empty, the name is auto-generated."
+  default     = null
+  type        = string
+}
+
+
 ### VNET
 variable "vnets" {
   description = <<-EOF
