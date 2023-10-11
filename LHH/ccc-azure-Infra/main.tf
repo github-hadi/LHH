@@ -33,7 +33,7 @@ locals {
 
 # Manage the network required for the topology.
 module "vnet" {
-  source = "../modules/vnet"
+  source = "../../modules/vnet"
 
   for_each = var.vnets
 
@@ -64,7 +64,7 @@ resource "azurerm_network_interface" "app-nic" {
 
   ip_configuration {
     name                          = "app-nic"
-    subnet_id                     = try(module.vnet[each.value.vnet_key].subnet_ids[v.subnet_key], null)
+    subnet_id                     = try(module.vnet.subnet_ids, null)
     private_ip_address_allocation = "Dynamic"
   }
 }
