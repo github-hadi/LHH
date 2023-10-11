@@ -9,9 +9,6 @@ resource "random_password" "this" {
   override_special = "_%@"
 }
 
-locals {
-  vm_password = coalesce(var.vm_password, try(random_password.this.result, null))
-}
 
 # Create or source the Resource Group.
 resource "azurerm_resource_group" "this" {
@@ -96,7 +93,7 @@ delete_data_disks_on_termination = true
 
 os_profile {
   admin_username      = "appadmin"
-  admin_password = local.vm_password
+  admin_password = coalesce(var.vm_password, random_password.this.result)
   computer_name  = "ccc-app"
   }
  os_profile_linux_config {
