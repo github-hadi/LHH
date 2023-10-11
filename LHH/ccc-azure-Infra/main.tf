@@ -75,21 +75,31 @@ resource "azurerm_virtual_machine" "app-vm" {
   name = "app-vm"
   resource_group_name = local.resource_group.name
   location            = var.location
-  size                = "Standard_ds1_v2"
+  vm_size             = "Standard_ds1_v2"
+  network_interface_ids = [azurerm_network_interface.app-nic.id]
+
+  storage_image_reference {
+   
+    publisher = var.custom_image_id
+    offer     = var.img_offer
+    sku       = var.img_sku
+    version   = var.img_version
+  }  
+ storage_os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+    os_type           = "Linux"
+  }
+
+delete_os_disk_on_termination    = true
+delete_data_disks_on_termination = true
+
+os_profile {
   admin_username      = "appadmin"
   admin_password = local.vm_password
   computer_name  = "ccc-app"
-  network_interface_ids = [azurerm_network_interface.app-nic.id]
-  
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
   }
-
-  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "19.04"
-    version   = "latest"
+ os_profile_linux_config {
+    disable_password_authentication = false
   }
 }
