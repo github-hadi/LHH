@@ -10,5 +10,5 @@ output "password" {
 }
 
 output "app_ip" {
-  value = azurerm_virtual_machine.azurerm_linux_virtual_machine.private_ip_address
+  value = azurerm_virtual_machine.app-vm.private_ip_address
 }
