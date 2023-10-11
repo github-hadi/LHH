@@ -46,7 +46,11 @@ variable "enable_zones" {
   type        = bool
 }
 
-
+variable "vm_password" {
+  description = "app vm password"
+  default     = null
+  type        = string
+}
 
 ### VNET
 variable "vnets" {
