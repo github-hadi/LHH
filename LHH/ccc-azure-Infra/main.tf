@@ -83,8 +83,8 @@ resource "azurerm_virtual_machine" "app-vm" {
     version   = var.img_version
   }  
  storage_os_disk {
+    create_option     = "FromImage"
     caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
     os_type           = "Linux"
   }
 
