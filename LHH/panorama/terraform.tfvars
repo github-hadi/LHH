@@ -1,21 +1,21 @@
 # --- GENERAL --- #
-location              = "North Europe"
-resource_group_name   = "panorama"
-name_prefix           = "example-"
+location              = "Australia Southeast"
+resource_group_name   = "ccc-management-rg"
+name_prefix           = "ccc-"
 create_resource_group = true
+panorama_sku = "byol"
 tags = {
-  "CreatedBy"   = "Palo Alto Networks"
+  "owner"   = "hazadeh@paloaltonetworks.com"
   "CreatedWith" = "Terraform"
 }
 enable_zones = false
 
 
-
 # --- VNET PART --- #
 vnets = {
   "vnet" = {
-    name          = "panorama-vnet"
-    address_space = ["10.1.0.0/27"]
+    name          = "management-vnet"
+    address_space = ["10.255.0.0/16"]
     network_security_groups = {
       "panorama" = {
         name = "panorama-nsg"
@@ -25,9 +25,9 @@ vnets = {
             direction                  = "Inbound"
             access                     = "Allow"
             protocol                   = "Tcp"
-            source_address_prefixes    = ["1.2.3.4"] # TODO: whitelist public IP addresses that will be used to manage the appliances
+            source_address_prefixes    = ["*"] 
             source_port_range          = "*"
-            destination_address_prefix = "10.1.0.0/24"
+            destination_address_prefix = "*"
             destination_port_ranges    = ["22", "443"]
           }
         }
@@ -35,8 +35,8 @@ vnets = {
     }
     subnets = {
       "panorama" = {
-        name                   = "panorama-snet"
-        address_prefixes       = ["10.1.0.0/28"]
+        name                   = "panorama-subnet"
+        address_prefixes       = ["10.255.0.0/24"]
         network_security_group = "panorama"
       }
     }
@@ -54,7 +54,7 @@ panoramas = {
       {
         name               = "management"
         subnet_key         = "panorama"
-        private_ip_address = "10.1.0.10"
+        private_ip_address = "10.255.0.4"
         create_pip         = true
       },
     ]

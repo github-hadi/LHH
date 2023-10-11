@@ -1,0 +1,96 @@
+# Generate a random password.
+resource "random_password" "this" {
+  count = var.vm_password == null ? 1 : 0
+
+  length           = 16
+  min_lower        = 16 - 4
+  min_numeric      = 1
+  min_special      = 1
+  min_upper        = 1
+  override_special = "_%@"
+}
+
+locals {
+  vm_password = coalesce(var.vm_password, try(random_password.this[0].result, null))
+}
+
+# Create or source the Resource Group.
+resource "azurerm_resource_group" "this" {
+  count    = var.create_resource_group ? 1 : 0
+  name     = "${var.name_prefix}${var.resource_group_name}"
+  location = var.location
+
+  tags = var.tags
+}
+
+data "azurerm_resource_group" "this" {
+  count = var.create_resource_group ? 0 : 1
+  name  = var.resource_group_name
+}
+
+locals {
+  resource_group = var.create_resource_group ? azurerm_resource_group.this[0] : data.azurerm_resource_group.this[0]
+}
+
+# Manage the network required for the topology.
+module "vnet" {
+  source = "../../modules/vnet"
+
+  for_each = var.vnets
+
+  name                   = each.value.name
+  name_prefix            = var.name_prefix
+  create_virtual_network = try(each.value.create_virtual_network, true)
+  resource_group_name    = try(each.value.resource_group_name, local.resource_group.name)
+  location               = var.location
+
+  address_space = try(each.value.create_virtual_network, true) ? each.value.address_space : []
+
+  create_subnets = try(each.value.create_subnets, true)
+  subnets        = each.value.subnets
+
+  network_security_groups = try(each.value.network_security_groups, {})
+  route_tables            = try(each.value.route_tables, {})
+
+  tags = var.tags
+}
+
+# app servers
+
+# Create network interface
+resource "azurerm_network_interface" "app-nic" {
+  name = "app-nic"
+  location            = var.location
+  resource_group_name = local.resource_group.name
+
+  ip_configuration {
+    name                          = "app-nic"
+    subnet_id                     = try(module.vnet[each.value.vnet_key].subnet_ids[v.subnet_key], null)
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+# app vm 
+
+resource "azurerm_linux_virtual_machine" "app-vm" {
+  name = "app-vm"
+  resource_group_name = local.resource_group.name
+  location            = var.location
+  size                = "Standard_ds1_v2"
+  admin_username      = "appadmin"
+  admin_password = local.vm_password
+  computer_name  = "ccc-app"
+  network_interface_ids = [azurerm_network_interface.app-nic.id]
+  
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "19.04"
+    version   = "latest"
+  }
+}
