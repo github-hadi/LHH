@@ -5,7 +5,7 @@ output "username" {
 
 output "password" {
   description = "Initial administrative password to use for VM-Series."
-  value       = local.vm_password
+  value       = var.vm_password
   sensitive   = true
 }
 
