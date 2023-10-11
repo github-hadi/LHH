@@ -83,6 +83,7 @@ resource "azurerm_virtual_machine" "app-vm" {
     version   = var.img_version
   }  
  storage_os_disk {
+    name              = coalesce(var.os_disk_name, "${var.name}-vhd")
     create_option     = "FromImage"
     caching              = "ReadWrite"
     os_type           = "Linux"
