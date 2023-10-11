@@ -9,6 +9,6 @@ output "password" {
   sensitive   = true
 }
 
-output "app_ip" {
-  value = azurerm_virtual_machine.app-vm.private_ip_address
-}
+#output "app_ip" {
+#  value = azurerm_virtual_machine.app-vm.private_ip_address
+#}
