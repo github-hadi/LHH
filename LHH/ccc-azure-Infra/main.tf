@@ -10,7 +10,7 @@ resource "random_password" "this" {
 }
 
 locals {
-  vm_password = coalesce(var.vm_password, try(random_password.this[0].result, null))
+  vm_password = coalesce(var.vm_password, try(random_password.this.result, null))
 }
 
 # Create or source the Resource Group.
@@ -71,7 +71,7 @@ resource "azurerm_network_interface" "app-nic" {
 
 # app vm 
 
-resource "azurerm_linux_virtual_machine" "app-vm" {
+resource "azurerm_virtual_machine" "app-vm" {
   name = "app-vm"
   resource_group_name = local.resource_group.name
   location            = var.location
