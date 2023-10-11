@@ -1,6 +1,5 @@
 # Generate a random password.
 resource "random_password" "this" {
-  count = var.vm_password == null ? 1 : 0
 
   length           = 16
   min_lower        = 16 - 4
@@ -34,7 +33,7 @@ locals {
 
 # Manage the network required for the topology.
 module "vnet" {
-  source = "../../modules/vnet"
+  source = "../modules/vnet"
 
   for_each = var.vnets
 
