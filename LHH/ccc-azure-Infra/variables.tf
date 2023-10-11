@@ -52,6 +52,35 @@ variable "vm_password" {
   type        = string
 }
 
+variable "custom_image_id" {
+  description = "Absolute ID of your own Custom Image to be used for creating a new virtual machine. If set, the `username`, `password`, `img_version`, `img_publisher`, `img_offer`, `img_sku` inputs are all ignored (these are used only for published images, not custom ones)."
+  default     = null
+  type        = string
+}
+
+variable "img_publisher" {
+  description = "The Azure Publisher identifier for a image which should be deployed."
+  default     = null
+  type        = string
+}
+
+variable "img_offer" {
+  description = "The Azure Offer identifier corresponding to a published image."
+  default     = null
+  type        = string
+}
+
+variable "img_sku" {
+  description = "Virtual machine image SKU - list available with `az vm image list -o table --all --publisher foo`"
+  default     = null
+  type        = string
+}
+
+variable "img_version" {
+  description = "Virtual machine image version - list available for a default `img_offer` with `az vm image list -o table --publisher foo --offer bar --all`"
+  default     = "latest"
+  type        = string
+}
 ### VNET
 variable "vnets" {
   description = <<-EOF
