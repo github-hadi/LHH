@@ -1,6 +1,6 @@
 # --- GENERAL --- #
 location              = "Australia Southeast"
-resource_group_name   = "ccc-app-rg"
+resource_group_name   = "app-rg"
 name_prefix           = "ccc-"
 create_resource_group = true
 custom_image_id = "Canonical"

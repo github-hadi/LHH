@@ -1,6 +1,6 @@
 # --- GENERAL --- #
 location            = "Australia Southeast"
-resource_group_name = "transit-vnet"
+resource_group_name = "transit-rg"
 name_prefix         = "ccc-"
 tags = {
   "owner"   = "hazadeh@paloaltonetworks.com"
@@ -11,7 +11,7 @@ tags = {
 # --- VNET PART --- #
 vnets = {
   "transit" = {
-    name          = "transit"
+    name          = "transit-vnet"
     address_space = ["10.110.0.0/16"]
     network_security_groups = {
       "management" = {
@@ -28,9 +28,6 @@ vnets = {
             destination_port_ranges    = ["22", "443"]
           }
         }
-      }
-      "public" = {
-        name = "public-nsg"
       }
     }
     route_tables = {
@@ -134,7 +131,7 @@ load_balancers = {
       "ha-ports" = {
         vnet_key           = "transit"
         subnet_key         = "private"
-        private_ip_address = "10.0.0.30"
+        private_ip_address = "10.110.0.21"
         in_rules = {
           HA_PORTS = {
             port     = 0
@@ -229,5 +226,12 @@ vmseries = {
  }
 }
 
+#vnet peering 
 
+local_peer_config {
+  vnet_name = ""${var.vnets}""
+}
 
+remote_peer_config {
+  vnet_name = ["ccc-app-vnet", "ccc-management-vnet"]
+}

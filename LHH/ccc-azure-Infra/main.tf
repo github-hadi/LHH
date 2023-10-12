@@ -53,6 +53,15 @@ module "vnet" {
 
 # app servers
 
+# create public IP address
+
+resource "azurerm_public_ip" "app-vm-public_ip" {
+  name                = "appPublicIP"
+  location            = var.location
+  resource_group_name = local.resource_group.name
+  allocation_method   = "Dynamic"
+}
+
 # Create network interface
 resource "azurerm_network_interface" "app-nic" {
   name = "app-nic"
@@ -63,6 +72,7 @@ resource "azurerm_network_interface" "app-nic" {
     name                          = "app-nic"
     subnet_id                     = try(module.vnet.subnet_ids, null)
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.app-vm-public_ip.id
   }
 }
 

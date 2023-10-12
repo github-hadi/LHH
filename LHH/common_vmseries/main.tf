@@ -308,3 +308,14 @@ module "appgw" {
   tags       = var.tags
   depends_on = [module.vmseries]
 }
+
+
+## -- VNET peering and routing -- ##
+ 
+module "peering" {
+  source = "../../modules/vnet_peering"
+
+  local_peer_config = var.local_peer_config
+  remote_peer_config = var.remote_peer_config
+  depends_on = [module.vnet, module.vmseries]
+}
