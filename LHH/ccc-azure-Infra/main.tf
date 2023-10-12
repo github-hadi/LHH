@@ -70,7 +70,7 @@ resource "azurerm_network_interface" "app-nic" {
 
   ip_configuration {
     name                          = "app-nic"
-    subnet_id                     = module.vnet[each.value.vnet_key].subnet_ids[v.subnet_key]
+    subnet_id                     = module.vnet[each.value.vnet_key].subnet_ids[value.subnet_key]
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.app-vm-public_ip.id
   }
