@@ -68,44 +68,6 @@ variable "vnets" {
   EOF
 }
 
-variable "natgws" {
-  description = <<-EOF
-  A map defining Nat Gateways. 
-
-  Please note that a NatGW is a zonal resource, this means it's always placed in a zone (even when you do not specify one explicitly). Please refer to Microsoft documentation for notes on NatGW's zonal resiliency. 
-
-  Following properties are supported:
-
-  - `name` : a name of the newly created NatGW.
-  - `create_natgw` : (default: `true`) create or source (when `false`) an existing NatGW. Created or sourced: the NatGW will be assigned to a subnet created by the `vnet` module.
-  - `resource_group_name : name of a Resource Group hosting the NatGW (newly create or the existing one).
-  - `zone` : Availability Zone in which the NatGW will be placed, when skipped AzureRM will pick a zone.
-  - `idle_timeout` : connection IDLE timeout in minutes, for newly created resources
-  - `vnet_key` : a name (key value) of a VNET defined in `var.vnets` that hosts a subnet this NatGW will be assigned to.
-  - `subnet_keys` : a list of subnets (key values) the NatGW will be assigned to, defined in `var.vnets` for a VNET described by `vnet_name`.
-  - `create_pip` : (default: `true`) create a Public IP that will be attached to a NatGW
-  - `existing_pip_name` : when `create_pip` is set to `false`, source and attach and existing Public IP to the NatGW
-  - `existing_pip_resource_group_name` : when `create_pip` is set to `false`, name of the Resource Group hosting the existing Public IP
-  - `create_pip_prefix` : (default: `false`) create a Public IP Prefix that will be attached to the NatGW.
-  - `pip_prefix_length` : length of the newly created Public IP Prefix, can bet between 0 and 31 but this actually supported value depends on the Subscription.
-  - `existing_pip_prefix_name` : when `create_pip_prefix` is set to `false`, source and attach and existing Public IP Prefix to the NatGW
-  - `existing_pip_prefix_resource_group_name` : when `create_pip_prefix` is set to `false`, name of the Resource Group hosting the existing Public IP Prefix.
-
-  Example:
-  ```
-  natgws = {
-    "natgw" = {
-      name         = "public-natgw"
-      vnet_key     = "transit-vnet"
-      subnet_keys  = ["public"]
-      zone         = 1
-    }
-  }
-  ```
-  EOF
-  default     = {}
-  type        = any
-}
 
 
 
@@ -181,6 +143,35 @@ variable "load_balancers" {
   default     = {}
 }
 
+
+### Application Gateway
+variable "appgws" {
+  description = <<-EOF
+  A map defining all Application Gateways in the current deployment.
+
+  For detailed documentation on how to configure this resource, for available properties, especially for the defaults and the `rules` property refer to [module documentation](../../modules/appgw/README.md).
+
+  Following properties are supported:
+  - `name` : name of the Application Gateway.
+  - `vnet_key` : a key of a VNET defined in the `var.vnets` map.
+  - `subnet_key` : a key of a subnet as defined in `var.vnets`. This has to be a subnet dedicated to Application Gateways v2.
+  - `zones` : for zonal deployment this is a list of all zones in a region - this property is used by both: the Application Gateway and the Public IP created in front of the AppGW.
+  - `capacity` : (optional) number of Application Gateway instances, not used when autoscalling is enabled (see `capacity_min`)
+  - `capacity_min` : (optional) when set enables autoscaling and becomes the minimum capacity
+  - `capacity_max` : (optional) maximum capacity for autoscaling
+  - `enable_http2` : enable HTTP2 support on the Application Gateway
+  - `waf_enabled` : (optional) enables WAF Application Gateway, defining WAF rules is not supported, defaults to `false`
+  - `vmseries_public_nic_name` : name of the public VMSeries interface as defined in `interfaces` property.
+  - `managed_identities` : (optional) a list of existing User-Assigned Managed Identities, which Application Gateway uses to retrieve certificates from Key Vault
+  - `ssl_policy_type` : (optional) type of an SSL policy, defaults to `Predefined`
+  - `ssl_policy_name` : (optional) name of an SSL policy, for `ssl_policy_type` set to `Predefined`
+  - `ssl_policy_min_protocol_version` : (optional) minimum version of the TLS protocol for SSL Policy, for `ssl_policy_type` set to `Custom`
+  - `ssl_policy_cipher_suites` : (optional) a list of accepted cipher suites, for `ssl_policy_type` set to `Custom`
+  - `ssl_profiles` : (optional) a map of SSL profiles that can be later on referenced in HTTPS listeners by providing a name of the profile in the `ssl_profile_name` property
+
+  EOF
+  default     = {}
+}
 
 
 ### GENERIC VMSERIES
@@ -361,31 +352,5 @@ variable "vmseries" {
   EOF
 }
 
-# Application Gateway
-variable "appgws" {
-  description = <<-EOF
-  A map defining all Application Gateways in the current deployment.
 
-  For detailed documentation on how to configure this resource, for available properties, especially for the defaults and the `rules` property refer to [module documentation](../../modules/appgw/README.md).
 
-  Following properties are supported:
-  - `name` : name of the Application Gateway.
-  - `vnet_key` : a key of a VNET defined in the `var.vnets` map.
-  - `subnet_key` : a key of a subnet as defined in `var.vnets`. This has to be a subnet dedicated to Application Gateways v2.
-  - `zones` : for zonal deployment this is a list of all zones in a region - this property is used by both: the Application Gateway and the Public IP created in front of the AppGW.
-  - `capacity` : (optional) number of Application Gateway instances, not used when autoscalling is enabled (see `capacity_min`)
-  - `capacity_min` : (optional) when set enables autoscaling and becomes the minimum capacity
-  - `capacity_max` : (optional) maximum capacity for autoscaling
-  - `enable_http2` : enable HTTP2 support on the Application Gateway
-  - `waf_enabled` : (optional) enables WAF Application Gateway, defining WAF rules is not supported, defaults to `false`
-  - `vmseries_public_nic_name` : name of the public VMSeries interface as defined in `interfaces` property.
-  - `managed_identities` : (optional) a list of existing User-Assigned Managed Identities, which Application Gateway uses to retrieve certificates from Key Vault
-  - `ssl_policy_type` : (optional) type of an SSL policy, defaults to `Predefined`
-  - `ssl_policy_name` : (optional) name of an SSL policy, for `ssl_policy_type` set to `Predefined`
-  - `ssl_policy_min_protocol_version` : (optional) minimum version of the TLS protocol for SSL Policy, for `ssl_policy_type` set to `Custom`
-  - `ssl_policy_cipher_suites` : (optional) a list of accepted cipher suites, for `ssl_policy_type` set to `Custom`
-  - `ssl_profiles` : (optional) a map of SSL profiles that can be later on referenced in HTTPS listeners by providing a name of the profile in the `ssl_profile_name` property
-
-  EOF
-  default     = {}
-}

@@ -1,9 +1,9 @@
 # --- GENERAL --- #
-location            = "North Europe"
-resource_group_name = "transit-vnet-common"
-name_prefix         = "example-"
+location            = "Australia Southeast"
+resource_group_name = "transit-vnet"
+name_prefix         = "ccc-"
 tags = {
-  "CreatedBy"   = "Palo Alto Networks"
+  "owner"   = "hazadeh@paloaltonetworks.com"
   "CreatedWith" = "Terraform"
 }
 
@@ -12,7 +12,7 @@ tags = {
 vnets = {
   "transit" = {
     name          = "transit"
-    address_space = ["10.0.0.0/25"]
+    address_space = ["10.110.0.0/16"]
     network_security_groups = {
       "management" = {
         name = "mgmt-nsg"
@@ -22,9 +22,9 @@ vnets = {
             direction                  = "Inbound"
             access                     = "Allow"
             protocol                   = "Tcp"
-            source_address_prefixes    = ["1.2.3.4"] # TODO: whitelist public IP addresses that will be used to manage the appliances
+            source_address_prefixes    = ["*"] 
             source_port_range          = "*"
-            destination_address_prefix = "10.0.0.0/28"
+            destination_address_prefix = "10.110.255.0/24"
             destination_port_ranges    = ["22", "443"]
           }
         }
@@ -38,11 +38,11 @@ vnets = {
         name = "mgmt-rt"
         routes = {
           "private_blackhole" = {
-            address_prefix = "10.0.0.16/28"
+            address_prefix = "10.110.0.0/24"
             next_hop_type  = "None"
           }
           "public_blackhole" = {
-            address_prefix = "10.0.0.32/28"
+            address_prefix = "10.110.129.0/24"
             next_hop_type  = "None"
           }
         }
@@ -53,14 +53,14 @@ vnets = {
           "default" = {
             address_prefix         = "0.0.0.0/0"
             next_hop_type          = "VirtualAppliance"
-            next_hop_in_ip_address = "10.0.0.30"
+            next_hop_in_ip_address = "10.110.0.21"
           }
           "mgmt_blackhole" = {
-            address_prefix = "10.0.0.0/28"
+            address_prefix = "10.110.255.0/24"
             next_hop_type  = "None"
           }
           "public_blackhole" = {
-            address_prefix = "10.0.0.32/28"
+            address_prefix = "10.110.129.0/24"
             next_hop_type  = "None"
           }
         }
@@ -69,11 +69,11 @@ vnets = {
         name = "public-rt"
         routes = {
           "mgmt_blackhole" = {
-            address_prefix = "10.0.0.0/28"
+            address_prefix = "10.110.255.0/24"
             next_hop_type  = "None"
           }
           "private_blackhole" = {
-            address_prefix = "10.0.0.16/28"
+            address_prefix = "10.110.0.0/24"
             next_hop_type  = "None"
           }
         }
@@ -82,25 +82,25 @@ vnets = {
     subnets = {
       "management" = {
         name                            = "mgmt-snet"
-        address_prefixes                = ["10.0.0.0/28"]
+        address_prefixes                = ["10.110.255.0/24"]
         network_security_group          = "management"
         route_table                     = "management"
         enable_storage_service_endpoint = true
       }
       "private" = {
         name             = "private-snet"
-        address_prefixes = ["10.0.0.16/28"]
+        address_prefixes = ["10.110.0.0/24"]
         route_table      = "private"
       }
       "public" = {
         name                   = "public-snet"
-        address_prefixes       = ["10.0.0.32/28"]
+        address_prefixes       = ["10.110.129.0/24"]
         network_security_group = "public"
         route_table            = "public"
       }
       "appgw" = {
         name             = "appgw-snet"
-        address_prefixes = ["10.0.0.48/28"]
+        address_prefixes = ["10.110.130.0/24"]
       }
     }
   }
@@ -113,7 +113,7 @@ load_balancers = {
     name                              = "public-lb"
     nsg_vnet_key                      = "transit"
     nsg_key                           = "public"
-    network_security_allow_source_ips = ["0.0.0.0/0"] # Put your own public IP address here  <-- TODO to be adjusted by the customer
+    network_security_allow_source_ips = ["0.0.0.0/0"] 
     avzones                           = ["1", "2", "3"]
     frontend_ips = {
       "palo-lb-app1" = {
@@ -146,63 +146,6 @@ load_balancers = {
   }
 }
 
-
-
-# # --- VMSERIES PART --- #
-vmseries_version = "10.2.3"
-vmseries_vm_size = "Standard_DS3_v2"
-vmseries = {
-  "fw-1" = {
-    name              = "firewall01"
-    bootstrap_options = "type=dhcp-client"
-    vnet_key          = "transit"
-    avzone            = 1
-    interfaces = [
-      {
-        name       = "mgmt"
-        subnet_key = "management"
-        create_pip = true
-      },
-      {
-        name              = "private"
-        subnet_key        = "private"
-        load_balancer_key = "private"
-      },
-      {
-        name              = "public"
-        subnet_key        = "public"
-        load_balancer_key = "public"
-        create_pip        = true
-      }
-    ]
-  }
-  "fw-2" = {
-    name              = "firewall02"
-    bootstrap_options = "type=dhcp-client"
-    vnet_key          = "transit"
-    avzone            = 2
-    interfaces = [
-      {
-        name       = "mgmt"
-        subnet_key = "management"
-        create_pip = true
-      },
-      {
-        name              = "private"
-        subnet_key        = "private"
-        load_balancer_key = "private"
-      },
-      {
-        name              = "public"
-        subnet_key        = "public"
-        load_balancer_key = "public"
-        create_pip        = true
-      }
-    ]
-  }
-}
-
-
 # # --- APPLICATION GATEWAYs --- #
 appgws = {
   "public" = {
@@ -230,3 +173,61 @@ appgws = {
     }
   }
 }
+
+
+
+# --- VMSERIES PART --- #
+vmseries_version = "10.2.3"
+vmseries_vm_size = "Standard_DS3_v2"
+bootstrap_options = "type=dhcp-client"
+vmseries = {
+ "fw-1" = {
+   name              = "firewall01"
+   vnet_key          = "transit"
+   avzone            = 1
+   interfaces = [
+     {
+       name       = "mgmt"
+       subnet_key = "management"
+       create_pip = true
+     },
+     {
+       name              = "private"
+       subnet_key        = "private"
+       load_balancer_key = "private"
+     },
+     {
+       name              = "public"
+       subnet_key        = "public"
+       load_balancer_key = "public"
+       create_pip        = true
+     }
+   ]
+ }
+ "fw-2" = {
+   name              = "firewall02"
+   vnet_key          = "transit"
+   avzone            = 2
+   interfaces = [
+     {
+       name       = "mgmt"
+       subnet_key = "management"
+       create_pip = true
+     },
+     {
+       name              = "private"
+       subnet_key        = "private"
+       load_balancer_key = "private"
+     },
+     {
+       name              = "public"
+       subnet_key        = "public"
+       load_balancer_key = "public"
+       create_pip        = true
+     }
+   ]
+ }
+}
+
+
+
