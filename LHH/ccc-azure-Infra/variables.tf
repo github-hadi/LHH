@@ -92,17 +92,17 @@ variable "os_disk_name" {
 variable "vnet" {
  description = "vnet list"
   default     = {}
-  type        = map(string)
+  type        = map(any)
 }
 
 variable "network_security_groups" {
  description = "NSG list"
   default     = {}
-  type        = map(string)
+  type        = map(any)
 }
 
 variable "subnets"  {
       description = "subnet list"
   default     = {}
-  type        = map(string)
+  type        = map(any)
 }
