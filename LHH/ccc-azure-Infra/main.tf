@@ -69,7 +69,7 @@ resource "azurerm_network_security_group" "app-nsg" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association "app01" {
+resource "azurerm_subnet_network_security_group_association" "app01" {
    subnet_id                 = azurerm_subnet.app-subnet01.id
    network_security_group_id = azurerm_network_security_group.app-nsg.id
 }
