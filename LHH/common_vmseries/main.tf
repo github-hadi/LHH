@@ -315,7 +315,13 @@ module "appgw" {
 module "peering" {
   source = "../../modules/vnet_peering"
 
-  local_peer_config = var.local_peer_config
-  remote_peer_config = var.remote_peer_config
+  local_peer_config  {
+    vnet_name = var.local_peer_config
+    resource_group_name = local.resource_group.name
+  }
+  remote_peer_config {
+    vnet_name = var.remote_peer_config.resrouce_group.vnet_name
+    resource_group_name = var.remote_peer_config.resrouce_group.name
+  } 
   depends_on = [module.vnet, module.vmseries]
 }
