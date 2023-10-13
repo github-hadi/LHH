@@ -11,7 +11,7 @@ resource "random_password" "this" {
 
 
 locals {
-  vm_password = coalesce(var.vm_password, try(random_password.this[0].result, null))
+  vm_password = coalesce(var.vm_password, try(random_password.this.result, null))
 }
 
 # Create or source the Resource Group.
@@ -49,6 +49,31 @@ resource "azurerm_subnet" "app-subnet01" {
   virtual_network_name = azurerm_virtual_network.app-vnet.name
   address_prefixes     = var.subnets.app-subnet01.address_prefixes
 }
+
+resource "azurerm_network_security_group" "app-nsg" {
+  
+  name                = "${var.name_prefix}-app-nsg"
+  location               = var.location
+  resource_group_name = local.resource_group.name
+  
+  security_rule {
+    name                       = 'http-ssh-Inbound-access"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_address_prefixes    = "*"
+    source_port_range          = "*"
+    destination_address_prefix = "*"
+    destination_port_ranges    = ["22", "80"]
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association "app01" {
+   subnet_id                 = azurerm_subnet.app-subnet01.id
+   network_security_group_id = azurerm_network_security_group.app-nsg.id
+}
+
 
 # app servers
 

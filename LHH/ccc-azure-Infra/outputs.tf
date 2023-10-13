@@ -10,9 +10,6 @@ output "password" {
 }
 
 output "app_private_ip" {
-  value = azurerm_virtual_machine.app-nic.private_ip_address
+  value = azurerm_network_interface.app-nic.private_ip_address
 }
 
-output "app_public_ip" {
-   value = azurerm_virtual_machine.app-nic.public_ip_address_id
-}
