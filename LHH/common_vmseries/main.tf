@@ -316,12 +316,12 @@ module "peering" {
   source = "../../modules/vnet_peering"
 
   local_peer_config  {
-    vnet_name = var.local_peer_config
+    vnet_name = var.vnets.name
     resource_group_name = local.resource_group.name
   }
   remote_peer_config {
-    vnet_name = var.remote_peer_config.resrouce_group.vnet_name
-    resource_group_name = var.remote_peer_config.resrouce_group.name
+    vnet_name = ["ccc-management-vnet","ccc-app-vnet"]
+    resource_group_name = [ "ccc-management-rg","ccc-app-rg" ]
   } 
   depends_on = [module.vnet, module.vmseries]
 }
