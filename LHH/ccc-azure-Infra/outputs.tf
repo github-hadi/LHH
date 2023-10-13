@@ -12,3 +12,8 @@ output "password" {
 #output "app_ip" {
 #  value = azurerm_virtual_machine.app-vm.private_ip_address
 #}
+
+output "subnet_ids" {
+  description = "The identifiers of the created or sourced Subnets."
+  value       = { for k, v in local.subnets : k => v.id }
+}
