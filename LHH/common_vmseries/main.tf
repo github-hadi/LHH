@@ -315,17 +315,15 @@ module "appgw" {
 module "peering" {
   source = "../../modules/vnet_peering"
 
+  for_each = var.peer_vnets
+
   local_peer_config = {
     vnet_name = ccc-transit-vnet
     resource_group_name = local.resource_group.name
   }
   remote_peer_config = {
-    vnet_name = "ccc-management-vnet"
-    resource_group_name = "ccc-management-rg"
-  } 
-  remote_peer_config = {
-    vnet_name = "ccc-app-vnet"
-    resource_group_name = "ccc-app-rg" 
+    vnet_name = each.value.vnet_name
+    resource_group_name = each.value.resource_group_name
   } 
   depends_on = [module.vnet, module.vmseries]
 }

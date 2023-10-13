@@ -257,15 +257,13 @@ vmseries = {
 }
 
 #vnet peering 
-
-## local_peer_config {
-##   vnet_name = "ccc-transit-vnet"
-## }
-## 
-## remote_peer_config {
-##   resrouce_group {
-##     name = [ "ccc-management-rg","ccc-app-rg" ]
-##     vnet_name = ["ccc-management-vnet","ccc-app-vnet"]
-##   }
-## 
-## }
+peer_vnet = {
+  "management" = {
+    "vnet_name" = "ccc-management-vnet"
+    "resource_group_name" = "ccc-management-vnet"
+  }
+  "app" = {
+    "vnet_name" = "ccc-app-vnet"
+    "resource_group_name" = "ccc-app-vnet"
+  }
+}
