@@ -229,7 +229,7 @@ vmseries = {
 #vnet peering 
 
 local_peer_config {
-  vnet_name = ""${var.vnets}""
+  vnet_name = "${var.vnets.transit.name}"
 }
 
 remote_peer_config {
