@@ -101,7 +101,7 @@ variable "network_security_groups" {
   type        = map(string)
 }
 
-variable "subnets" = {
+variable "subnets"  {
       description = "subnet list"
   default     = {}
   type        = map(string)
