@@ -57,12 +57,12 @@ resource "azurerm_network_security_group" "app-nsg" {
   resource_group_name = local.resource_group.name
   
   security_rule {
-    name                       = 'http-ssh-Inbound-access"
+    name                       = "http-ssh-Inbound-access"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_address_prefixes    = "*"
+    source_address_prefixes    = ["0.0.0.0/0"]
     source_port_range          = "*"
     destination_address_prefix = "*"
     destination_port_ranges    = ["22", "80"]
