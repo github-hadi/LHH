@@ -260,10 +260,10 @@ vmseries = {
 peer_vnets = {
   "management" = {
     "vnet_name" = "ccc-management-vnet"
-    "resource_group_name" = "ccc-management-vnet"
+    "resource_group_name" = "ccc-management-rg"
   }
   "app" = {
-    "vnet_name" = "ccc-app-vnet"
-    "resource_group_name" = "ccc-app-vnet"
+    "vnet_name" = "ccc-app01-vnet"
+    "resource_group_name" = "ccc-app-rg"
   }
 }
