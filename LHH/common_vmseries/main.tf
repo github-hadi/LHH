@@ -315,11 +315,11 @@ module "appgw" {
 module "peering" {
   source = "../../modules/vnet_peering"
 
-  local_peer_config  {
+  local_peer_config = {
     vnet_name = var.vnets.name
     resource_group_name = local.resource_group.name
   }
-  remote_peer_config {
+  remote_peer_config = {
     vnet_name = ["ccc-management-vnet","ccc-app-vnet"]
     resource_group_name = [ "ccc-management-rg","ccc-app-rg" ]
   } 
