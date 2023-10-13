@@ -32,7 +32,7 @@ locals {
 
 resource "azurerm_virtual_network" "app-vnet" {
   for_each = var.vnets
-  name                = ${var.name_prefix}${each.value.name}
+  name                = "${var.name_prefix}${each.value.name}"
   address_space       = each.value.address_space
   location               = var.location
   resource_group_name = local.resource_group.name
