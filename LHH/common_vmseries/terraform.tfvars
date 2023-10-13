@@ -257,7 +257,7 @@ vmseries = {
 }
 
 #vnet peering 
-peer_vnet = {
+peer_vnets = {
   "management" = {
     "vnet_name" = "ccc-management-vnet"
     "resource_group_name" = "ccc-management-vnet"

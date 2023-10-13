@@ -358,7 +358,7 @@ variable "vmseries" {
 }
 
 
-variable "peer_vnet" {
+variable "peer_vnets" {
   default = null
   type = map(any)
 }

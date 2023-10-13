@@ -318,7 +318,7 @@ module "peering" {
   for_each = var.peer_vnets
 
   local_peer_config = {
-    vnet_name = ccc-transit-vnet
+    vnet_name = "ccc-transit-vnet"
     resource_group_name = local.resource_group.name
   }
   remote_peer_config = {
