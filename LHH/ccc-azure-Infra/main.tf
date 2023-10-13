@@ -10,6 +10,10 @@ resource "random_password" "this" {
 }
 
 
+locals {
+  vm_password = coalesce(var.vm_password, try(random_password.this[0].result, null))
+}
+
 # Create or source the Resource Group.
 resource "azurerm_resource_group" "this" {
   count    = var.create_resource_group ? 1 : 0
@@ -42,7 +46,7 @@ resource "azurerm_subnet" "app-subnet01" {
 
   name                 = var.subnets.app-subnet01.name
   resource_group_name  = local.resource_group.name
-  virtual_network_name = azurerm_virtual_network.app-vnet
+  virtual_network_name = azurerm_virtual_network.app-vnet.name
   address_prefixes     = var.subnets.app-subnet01.address_prefixes
 }
 

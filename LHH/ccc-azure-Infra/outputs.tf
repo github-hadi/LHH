@@ -5,15 +5,12 @@ output "username" {
 
 output "password" {
   description = "Initial administrative password to use for VM-Series."
-  value       = var.vm_password
+  value       = local.vm_password
   sensitive   = true
 }
 
 #output "app_ip" {
-#  value = azurerm_virtual_machine.app-vm.private_ip_address
+#  value = azurerm_virtual_machine.app-nic.private_ip_address
+   value = azurerm_virtual_machine.app-nic.app-vm-public_ip
 #}
 
-output "subnet_ids" {
-  description = "The identifiers of the created or sourced Subnets."
-  value       = { for k, v in local.subnets : k => v.id }
-}
