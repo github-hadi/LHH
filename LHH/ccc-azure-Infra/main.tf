@@ -29,26 +29,22 @@ locals {
 }
 
 # Manage the network required for the topology.
-module "vnet" {
-  source = "../../modules/vnet"
+
+resource "azurerm_virtual_network" "app-vnet" {
+  for_each = var.vnets
+  name                = ${var.name_prefix}${each.value.name}
+  address_space       = each.value.address_space
+  location               = var.location
+  resource_group_name = local.resource_group.name
+}
+
+resource "azurerm_subnet" "app-subnets" {
 
   for_each = var.vnets
-
-  name                   = each.value.name
-  name_prefix            = var.name_prefix
-  create_virtual_network = try(each.value.create_virtual_network, true)
-  resource_group_name    = try(each.value.resource_group_name, local.resource_group.name)
-  location               = var.location
-
-  address_space = try(each.value.create_virtual_network, true) ? each.value.address_space : []
-
-  create_subnets = try(each.value.create_subnets, true)
-  subnets        = each.value.subnets
-
-  network_security_groups = try(each.value.network_security_groups, {})
-  route_tables            = try(each.value.route_tables, {})
-
-  tags = var.tags
+  name                 = each.value.subnets.name
+  resource_group_name  = local.resource_group.name
+  virtual_network_name = azurerm_virtual_network.app-vnet
+  address_prefixes     = each.value.address_prefixes
 }
 
 # app servers
@@ -70,7 +66,7 @@ resource "azurerm_network_interface" "app-nic" {
 
   ip_configuration {
     name                          = "app-nic"
-    subnet_id                     = module.vnet.subnet_ids
+    subnet_id                     = azurerm_subnet.app-subnets.id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.app-vm-public_ip.id
   }
