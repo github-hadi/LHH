@@ -29,6 +29,36 @@ vnets = {
           }
         }
       }
+      "public" = {
+        name = "public-nsg"
+        rules = {
+          vmseries_mgmt_allow_inbound = {
+            priority                   = 100
+            direction                  = "Inbound"
+            access                     = "Allow"
+            protocol                   = "Tcp"
+            source_address_prefixes    = ["*"] 
+            source_port_range          = "*"
+            destination_address_prefix = "10.110.129.0/24"
+            destination_port_ranges    = ["*"]
+          }
+        }
+      }
+      "private" = {
+        name = "private-nsg"
+        rules = {
+          vmseries_mgmt_allow_inbound = {
+            priority                   = 100
+            direction                  = "Inbound"
+            access                     = "Allow"
+            protocol                   = "Tcp"
+            source_address_prefixes    = ["*"] 
+            source_port_range          = "*"
+            destination_address_prefix = "10.110.0.0/24"
+            destination_port_ranges    = ["*"]
+          }
+        }
+      }
     }
     route_tables = {
       "management" = {
