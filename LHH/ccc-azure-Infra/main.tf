@@ -66,7 +66,7 @@ resource "azurerm_network_interface" "app-nic" {
 
   ip_configuration {
     name                          = "app-nic"
-    subnet_id                     = azurerm_subnet.app-subnets.id
+    subnet_id                     = azurerm_subnet.app-subnets.id[each.key]
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.app-vm-public_ip.id
   }
