@@ -14,12 +14,12 @@ tags = {
 enable_zones = false
 
 
-# --- VNET PART --- #
-vnets = {
+
   "vnet" = {
-    name          = "app-vnet"
+    name          = "app01-vnet"
     address_space = ["10.112.0.0/16"]
-    network_security_groups = {
+  }
+  network_security_groups = {
       "app" = {
         name = "app-nsg"
         rules = {
@@ -36,13 +36,13 @@ vnets = {
         }
       }
     }
-    subnets = {
+  subnets = {
       "app-subnet01" = {
         name                   = "app-subnet01"
         address_prefixes       = ["10.112.0.0/24"]
         network_security_group = "app"
       }
     }
-  }
-}
+  
+
 
