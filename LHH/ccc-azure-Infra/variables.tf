@@ -89,22 +89,20 @@ variable "os_disk_name" {
 
 
 ### VNET
-variable "vnets" {
-  description = <<-EOF
-  A map defining VNETs. A key is the VNET name, value is a set of properties like described below.
-  
-  For detailed documentation on each property refer to [module documentation](../../modules/vnet/README.md)
-
-  - `name` : a name of a Virtual Network
-  - `create_virtual_network` : (default: `true`) when set to `true` will create a VNET, `false` will source an existing VNET
-  - `address_space` : a list of CIDRs for VNET
-  - `resource_group_name` :  (default: current RG) a name of a Resource Group in which the VNET will reside
-
-  - `create_subnets` : (default: `true`) if true, create the Subnets inside the Virtual Network, otherwise use pre-existing subnets
-  - `subnets` : map of Subnets to create
-
-  - `network_security_groups` : map of Network Security Groups to create
-  - `route_tables` : map of Route Tables to create.
-  EOF
+variable "vnet" {
+ description = "vnet list"
+  default     = {}
+  type        = map(string)
 }
 
+variable "network_security_groups" {
+ description = "NSG list"
+  default     = {}
+  type        = map(string)
+}
+
+subnets = {
+      description = "subnet list"
+  default     = {}
+  type        = map(string)
+}

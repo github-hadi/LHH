@@ -15,11 +15,12 @@ enable_zones = false
 
 
 
-  "vnet" = {
+vnet = {
     name          = "app01-vnet"
     address_space = ["10.112.0.0/16"]
-  }
-  network_security_groups = {
+}
+
+network_security_groups = {
       "app" = {
         name = "app-nsg"
         rules = {
@@ -36,13 +37,13 @@ enable_zones = false
         }
       }
     }
-  subnets = {
+subnets = {
       "app-subnet01" = {
         name                   = "app-subnet01"
         address_prefixes       = ["10.112.0.0/24"]
         network_security_group = "app"
       }
-    }
+}
   
 
 
