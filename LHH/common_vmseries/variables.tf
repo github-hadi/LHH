@@ -280,6 +280,11 @@ variable "bootstrap_storage" {
   type        = any
 }
 
+variable "bootstrap_options" {
+  description = "added to remove the need for 2 options (one per firewall)"
+  default = null
+}
+
 variable "vmseries" {
   description = <<-EOF
   Map of virtual machines to create to run VM-Series - inbound firewalls. Following properties are supported:
