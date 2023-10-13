@@ -1,5 +1,5 @@
 # --- GENERAL --- #
-location              = "Australia Southeast"
+location              = "Australia East"
 resource_group_name   = "app-rg"
 name_prefix           = "ccc-"
 create_resource_group = true

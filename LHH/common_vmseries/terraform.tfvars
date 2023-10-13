@@ -1,5 +1,5 @@
 # --- GENERAL --- #
-location            = "Australia Southeast"
+location            = "Australia East"
 resource_group_name = "transit-rg"
 name_prefix         = "ccc-"
 tags = {
@@ -22,7 +22,7 @@ vnets = {
             direction                  = "Inbound"
             access                     = "Allow"
             protocol                   = "Tcp"
-            source_address_prefixes    = ["*"] 
+            source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
             destination_address_prefix = "10.110.255.0/24"
             destination_port_ranges    = ["22", "443"]
@@ -37,10 +37,10 @@ vnets = {
             direction                  = "Inbound"
             access                     = "Allow"
             protocol                   = "Tcp"
-            source_address_prefixes    = ["*"] 
+            source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
             destination_address_prefix = "10.110.129.0/24"
-            destination_port_ranges    = ["*"]
+            destination_port_ranges    = ["0-65535"]
           }
         }
       }
@@ -52,10 +52,10 @@ vnets = {
             direction                  = "Inbound"
             access                     = "Allow"
             protocol                   = "Tcp"
-            source_address_prefixes    = ["*"] 
+            source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
             destination_address_prefix = "10.110.0.0/24"
-            destination_port_ranges    = ["*"]
+            destination_port_ranges    = ["0-65535"]
           }
         }
       }
