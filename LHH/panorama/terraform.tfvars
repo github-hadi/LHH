@@ -1,6 +1,6 @@
 # --- GENERAL --- #
 location              = "Australia Southeast"
-resource_group_name   = "ccc-management-rg"
+resource_group_name   = "management-rg"
 name_prefix           = "ccc-"
 create_resource_group = true
 panorama_sku = "byol"
