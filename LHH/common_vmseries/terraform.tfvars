@@ -206,10 +206,10 @@ appgws = {
 # --- VMSERIES PART --- #
 vmseries_version = "10.2.3"
 vmseries_vm_size = "Standard_DS3_v2"
-# bootstrap_pars = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ__UNi0qUHCa4lILJSrMktaJ0_c7W;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes;"
 vmseries = {
  "fw-1" = {
    name              = "firewall01"
+   bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ__UNi0qUHCa4lILJSrMktaJ0_c7W;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
    vnet_key          = "transit"
    avzone            = 1
    interfaces = [
@@ -233,6 +233,7 @@ vmseries = {
  }
  "fw-2" = {
    name              = "firewall02"
+   bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ__UNi0qUHCa4lILJSrMktaJ0_c7W;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
    vnet_key          = "transit"
    avzone            = 2
    interfaces = [

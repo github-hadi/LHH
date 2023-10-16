@@ -271,7 +271,7 @@ module "vmseries" {
 
   enable_zones = var.enable_zones
   avzone       = try(each.value.avzone, 1)
-  bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ__UNi0qUHCa4lILJSrMktaJ0_c7W;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
+  bootstrap_options = each.value.bootstrap_options
 
 
   interfaces = [for v in each.value.interfaces : {
