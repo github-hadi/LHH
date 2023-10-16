@@ -206,7 +206,7 @@ appgws = {
 # --- VMSERIES PART --- #
 vmseries_version = "10.2.3"
 vmseries_vm_size = "Standard_DS3_v2"
-bootstrap_options = "type=dhcp-client"
+# bootstrap_pars = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ__UNi0qUHCa4lILJSrMktaJ0_c7W;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes;"
 vmseries = {
  "fw-1" = {
    name              = "firewall01"

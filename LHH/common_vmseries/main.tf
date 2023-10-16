@@ -223,7 +223,23 @@ module "ai" {
 ##  ]
 ##}
 
+## -- VNET peering and routing -- ##
+ 
+module "peering" {
+  source = "../../modules/vnet_peering"
 
+  for_each = var.peer_vnets
+
+  local_peer_config = {
+    vnet_name = "ccc-transit-vnet"
+    resource_group_name = local.resource_group.name
+  }
+  remote_peer_config = {
+    vnet_name = each.value.vnet_name
+    resource_group_name = each.value.resource_group_name
+  } 
+  depends_on = [module.vnet, module.vmseries]
+}
 
 resource "azurerm_availability_set" "this" {
   for_each = var.availability_sets
@@ -255,7 +271,8 @@ module "vmseries" {
 
   enable_zones = var.enable_zones
   avzone       = try(each.value.avzone, 1)
-  bootstrap_options = var.bootstrap_options
+  bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ__UNi0qUHCa4lILJSrMktaJ0_c7W;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
+
 
   interfaces = [for v in each.value.interfaces : {
     name                     = "${var.name_prefix}${each.value.name}-${v.name}"
@@ -310,20 +327,3 @@ module "vmseries" {
 ## }
 
 
-## -- VNET peering and routing -- ##
- 
-module "peering" {
-  source = "../../modules/vnet_peering"
-
-  for_each = var.peer_vnets
-
-  local_peer_config = {
-    vnet_name = "ccc-transit-vnet"
-    resource_group_name = local.resource_group.name
-  }
-  remote_peer_config = {
-    vnet_name = each.value.vnet_name
-    resource_group_name = each.value.resource_group_name
-  } 
-  depends_on = [module.vnet, module.vmseries]
-}
