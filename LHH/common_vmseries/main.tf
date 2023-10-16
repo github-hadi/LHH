@@ -275,39 +275,39 @@ module "vmseries" {
   ]
 }
 
-module "appgw" {
-  source = "../../modules/appgw"
-
-  for_each = var.appgws
-
-  name                = "${var.name_prefix}${each.value.name}"
-  resource_group_name = local.resource_group.name
-  location            = var.location
-  subnet_id           = module.vnet[each.value.vnet_key].subnet_ids[each.value.subnet_key]
-
-  managed_identities = try(each.value.managed_identities, null)
-  waf_enabled        = try(each.value.waf_enabled, false)
-  capacity           = try(each.value.capacity, null)
-  capacity_min       = try(each.value.capacity_min, null)
-  capacity_max       = try(each.value.capacity_max, null)
-  enable_http2       = try(each.value.enable_http2, null)
-  zones              = try(each.value.zones, null)
-
-  vmseries_ips = [for k, v in var.vmseries : module.vmseries[k].interfaces[
-    "${var.name_prefix}${v.name}-${each.value.vmseries_public_nic_name}"
-  ].private_ip_address if try(v.add_to_appgw_backend, false)]
-
-  rules = each.value.rules
-
-  ssl_policy_type                 = try(each.value.ssl_policy_type, null)
-  ssl_policy_name                 = try(each.value.ssl_policy_name, null)
-  ssl_policy_min_protocol_version = try(each.value.ssl_policy_min_protocol_version, null)
-  ssl_policy_cipher_suites        = try(each.value.ssl_policy_cipher_suites, [])
-  ssl_profiles                    = try(each.value.ssl_profiles, {})
-
-  tags       = var.tags
-  depends_on = [module.vmseries]
-}
+## module "appgw" {
+##   source = "../../modules/appgw"
+## 
+##   for_each = var.appgws
+## 
+##   name                = "${var.name_prefix}${each.value.name}"
+##   resource_group_name = local.resource_group.name
+##   location            = var.location
+##   subnet_id           = module.vnet[each.value.vnet_key].subnet_ids[each.value.subnet_key]
+## 
+##   managed_identities = try(each.value.managed_identities, null)
+##   waf_enabled        = try(each.value.waf_enabled, false)
+##   capacity           = try(each.value.capacity, null)
+##   capacity_min       = try(each.value.capacity_min, null)
+##   capacity_max       = try(each.value.capacity_max, null)
+##   enable_http2       = try(each.value.enable_http2, null)
+##   zones              = try(each.value.zones, null)
+## 
+##   vmseries_ips = [for k, v in var.vmseries : module.vmseries[k].interfaces[
+##     "${var.name_prefix}${v.name}-${each.value.vmseries_public_nic_name}"
+##   ].private_ip_address if try(v.add_to_appgw_backend, false)]
+## 
+##   rules = each.value.rules
+## 
+##   ssl_policy_type                 = try(each.value.ssl_policy_type, null)
+##   ssl_policy_name                 = try(each.value.ssl_policy_name, null)
+##   ssl_policy_min_protocol_version = try(each.value.ssl_policy_min_protocol_version, null)
+##   ssl_policy_cipher_suites        = try(each.value.ssl_policy_cipher_suites, [])
+##   ssl_profiles                    = try(each.value.ssl_profiles, {})
+## 
+##   tags       = var.tags
+##   depends_on = [module.vmseries]
+## }
 
 
 ## -- VNET peering and routing -- ##
