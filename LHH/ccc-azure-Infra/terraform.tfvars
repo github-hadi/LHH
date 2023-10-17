@@ -14,7 +14,6 @@ tags = {
 enable_zones = false
 
 
-
 vnet = {
     name          = "app01-vnet"
     address_space = ["10.112.0.0/16"]
@@ -40,7 +39,7 @@ network_security_groups = {
 subnets = {
       "app-subnet01" = {
         name                   = "app-subnet01"
-        address_prefixes       = ["10.112.0.0/24"]
+        address_prefixes       = ["10.112.1.0/24"]
         network_security_group = "app"
       }
 }

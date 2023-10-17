@@ -24,7 +24,7 @@ vnets = {
             protocol                   = "Tcp"
             source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
-            destination_address_prefix = "10.110.255.0/24"
+            destination_address_prefix = ["0.0.0.0/0"]
             destination_port_ranges    = ["22", "443"]
           }
         }
@@ -39,7 +39,7 @@ vnets = {
             protocol                   = "Tcp"
             source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
-            destination_address_prefix = "10.110.129.0/24"
+            destination_address_prefix = ["0.0.0.0/0"]
             destination_port_ranges    = ["0-65535"]
           }
         }
@@ -54,7 +54,7 @@ vnets = {
             protocol                   = "Tcp"
             source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
-            destination_address_prefix = "10.110.0.0/24"
+            destination_address_prefix = ["0.0.0.0/0"]
             destination_port_ranges    = ["0-65535"]
           }
         }
@@ -66,24 +66,6 @@ vnets = {
         routes = {
           "private_blackhole" = {
             address_prefix = "10.110.0.0/24"
-            next_hop_type  = "None"
-          }
-          "public_blackhole" = {
-            address_prefix = "10.110.129.0/24"
-            next_hop_type  = "None"
-          }
-        }
-      }
-      "private" = {
-        name = "private-rt"
-        routes = {
-          "default" = {
-            address_prefix         = "0.0.0.0/0"
-            next_hop_type          = "VirtualAppliance"
-            next_hop_in_ip_address = "10.110.0.21"
-          }
-          "mgmt_blackhole" = {
-            address_prefix = "10.110.255.0/24"
             next_hop_type  = "None"
           }
           "public_blackhole" = {
@@ -106,6 +88,24 @@ vnets = {
         }
       }
     }
+     "private" = {
+        name = "private-rt"
+        routes = {
+          "default" = {
+            address_prefix         = "0.0.0.0/0"
+            next_hop_type          = "VirtualAppliance"
+            next_hop_in_ip_address = "10.110.0.21"
+          }
+          "mgmt_blackhole" = {
+            address_prefix = "10.110.255.0/24"
+            next_hop_type  = "None"
+          }
+          "public_blackhole" = {
+            address_prefix = "10.110.129.0/24"
+            next_hop_type  = "None"
+          }
+        }
+      }
     subnets = {
       "management" = {
         name                            = "mgmt-snet"
@@ -114,20 +114,16 @@ vnets = {
         route_table                     = "management"
         enable_storage_service_endpoint = true
       }
-      "private" = {
-        name             = "private-snet"
-        address_prefixes = ["10.110.0.0/24"]
-        route_table      = "private"
-      }
       "public" = {
         name                   = "public-snet"
         address_prefixes       = ["10.110.129.0/24"]
         network_security_group = "public"
         route_table            = "public"
       }
-      "appgw" = {
-        name             = "appgw-snet"
-        address_prefixes = ["10.110.130.0/24"]
+      "private" = {
+        name             = "private-snet"
+        address_prefixes = ["10.110.0.0/24"]
+        route_table      = "private"
       }
     }
   }
@@ -173,35 +169,6 @@ load_balancers = {
   }
 }
 
-# # --- APPLICATION GATEWAYs --- #
-appgws = {
-  "public" = {
-    name                     = "public-appgw"
-    vnet_key                 = "transit"
-    subnet_key               = "appgw"
-    zones                    = ["1", "2", "3"]
-    capacity                 = 2
-    vmseries_public_nic_name = "public"
-    rules = {
-      "minimum" = {
-        priority = 1
-        listener = {
-          port = 80
-        }
-        rewrite_sets = {
-          "xff-strip-port" = {
-            sequence = 100
-            request_headers = {
-              "X-Forwarded-For" = "{var_add_x_forwarded_for_proxy}"
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-
 
 # --- VMSERIES PART --- #
 vmseries_version = "10.2.3"
@@ -218,17 +185,18 @@ vmseries = {
        subnet_key = "management"
        create_pip = true
      },
-     {
-       name              = "private"
-       subnet_key        = "private"
-       load_balancer_key = "private"
-     },
+     
      {
        name              = "public"
        subnet_key        = "public"
        load_balancer_key = "public"
        create_pip        = true
      }
+      {
+       name              = "private"
+       subnet_key        = "private"
+       load_balancer_key = "private"
+     },
    ]
  }
  "fw-2" = {
@@ -243,16 +211,16 @@ vmseries = {
        create_pip = true
      },
      {
-       name              = "private"
-       subnet_key        = "private"
-       load_balancer_key = "private"
-     },
-     {
        name              = "public"
        subnet_key        = "public"
        load_balancer_key = "public"
        create_pip        = true
      }
+      {
+       name              = "private"
+       subnet_key        = "private"
+       load_balancer_key = "private"
+     },
    ]
  }
 }
