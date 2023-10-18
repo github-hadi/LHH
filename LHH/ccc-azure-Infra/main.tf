@@ -95,7 +95,7 @@ resource "azurerm_network_interface" "app-nic" {
     subnet_id                     = azurerm_subnet.app-subnet01.id
     private_ip_address_allocation = "Static"
     private_ip_address            = "10.112.1.4"
-    public_ip_address_id          = azurerm_public_ip.app-vm-public_ip.id
+    #public_ip_address_id          = azurerm_public_ip.app-vm-public_ip.id
   }
 }
 
