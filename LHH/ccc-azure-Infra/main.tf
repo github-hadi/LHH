@@ -1,4 +1,4 @@
-# Generate a random password.
+# Generate a random password
 resource "random_password" "this" {
 
   length           = 16
@@ -14,7 +14,7 @@ locals {
   vm_password = coalesce(var.vm_password, try(random_password.this.result, null))
 }
 
-# Create or source the Resource Group.
+# Create or source the Resource Group
 resource "azurerm_resource_group" "this" {
   count    = var.create_resource_group ? 1 : 0
   name     = "${var.name_prefix}${var.resource_group_name}"
@@ -32,7 +32,7 @@ locals {
   resource_group = var.create_resource_group ? azurerm_resource_group.this[0] : data.azurerm_resource_group.this[0]
 }
 
-# Manage the network required for the topology.
+#The network required for the topology
 
 resource "azurerm_virtual_network" "app-vnet" {
  
@@ -52,7 +52,7 @@ resource "azurerm_subnet" "app-subnet01" {
 
 resource "azurerm_network_security_group" "app-nsg" {
   
-  name                = "${var.name_prefix}-app-nsg"
+  name                = "app-nsg"
   location               = var.location
   resource_group_name = local.resource_group.name
   
@@ -69,22 +69,20 @@ resource "azurerm_network_security_group" "app-nsg" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "app01" {
+resource "azurerm_subnet_network_security_group_association" "app-subnet01-nsg" {
    subnet_id                 = azurerm_subnet.app-subnet01.id
    network_security_group_id = azurerm_network_security_group.app-nsg.id
 }
 
 
-# app servers
-
+# app server 
 # create public IP address
-
-resource "azurerm_public_ip" "app-vm-public_ip" {
-  name                = "appPublicIP"
-  location            = var.location
-  resource_group_name = local.resource_group.name
-  allocation_method   = "Dynamic"
-}
+## resource "azurerm_public_ip" "app-vm-public_ip" {
+##   name                = "appPublicIP"
+##   location            = var.location
+##   resource_group_name = local.resource_group.name
+##   allocation_method   = "Dynamic"
+## }
 
 # Create network interface
 resource "azurerm_network_interface" "app-nic" {
@@ -100,7 +98,12 @@ resource "azurerm_network_interface" "app-nic" {
   }
 }
 
-# app vm 
+resource "azurerm_network_interface_security_group_association" "nic-nsg" {
+  network_interface_id      = azurerm_network_interface.app-nic.id
+  network_security_group_id = azurerm_network_security_group.app-nsg.id
+}
+
+#deploying an Ubunutu vm
 
 resource "azurerm_virtual_machine" "app-vm" {
   name = "app-vm"
@@ -129,8 +132,9 @@ delete_data_disks_on_termination = true
 os_profile {
   admin_username      = "appadmin"
   admin_password = coalesce(var.vm_password, random_password.this.result)
-  computer_name  = "ccc-app"
+  computer_name  = "ccc-web-app"
   }
+  
  os_profile_linux_config {
     disable_password_authentication = false
   }
