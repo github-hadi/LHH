@@ -24,7 +24,7 @@ vnets = {
             protocol                   = "Tcp"
             source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
-            destination_address_prefix = ["0.0.0.0/0"]
+            destination_address_prefix = "*"
             destination_port_ranges    = ["22", "443"]
           }
         }
@@ -39,7 +39,7 @@ vnets = {
             protocol                   = "Tcp"
             source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
-            destination_address_prefix = ["0.0.0.0/0"]
+            destination_address_prefix = "*"
             destination_port_ranges    = ["0-65535"]
           }
         }
@@ -54,7 +54,7 @@ vnets = {
             protocol                   = "Tcp"
             source_address_prefixes    = ["0.0.0.0/0"] 
             source_port_range          = "*"
-            destination_address_prefix = ["0.0.0.0/0"]
+            destination_address_prefix = "*"
             destination_port_ranges    = ["0-65535"]
           }
         }
@@ -87,7 +87,6 @@ vnets = {
           }
         }
       }
-    }
      "private" = {
         name = "private-rt"
         routes = {
@@ -106,6 +105,7 @@ vnets = {
           }
         }
       }
+    }
     subnets = {
       "management" = {
         name                            = "mgmt-snet"
@@ -191,7 +191,7 @@ vmseries = {
        subnet_key        = "public"
        load_balancer_key = "public"
        create_pip        = true
-     }
+     },
       {
        name              = "private"
        subnet_key        = "private"
@@ -215,7 +215,7 @@ vmseries = {
        subnet_key        = "public"
        load_balancer_key = "public"
        create_pip        = true
-     }
+     },
       {
        name              = "private"
        subnet_key        = "private"

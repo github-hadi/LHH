@@ -14,6 +14,12 @@ locals {
   vmseries_password = coalesce(var.vmseries_password, try(random_password.this[0].result, null))
 }
 
+# Obtain Public IP address of code deployment machine
+
+##data "http" "this" {
+##  count = length(var.bootstrap_storage) > 0 && contains([for v in values(var.bootstrap_storage) : v.storage_acl], true) ? 1 : 0
+##  url   = "https://ifconfig.me/ip"
+##}
 
 # Create or source the Resource Group.
 resource "azurerm_resource_group" "this" {
@@ -55,6 +61,74 @@ module "vnet" {
 
   tags = var.tags
 }
+
+
+# create load balancers, both internal and external
+module "load_balancer" {
+  source = "../../modules/loadbalancer"
+
+  for_each = var.load_balancers
+
+  name                = "${var.name_prefix}${each.value.name}"
+  location            = var.location
+  resource_group_name = local.resource_group.name
+  enable_zones        = var.enable_zones
+  avzones             = try(each.value.avzones, null)
+
+  network_security_group_name = try(
+    "${var.name_prefix}${var.vnets[each.value.nsg_vnet_key].network_security_groups[each.value.nsg_key].name}",
+    each.value.network_security_group_name,
+    null
+  )
+  # network_security_group_name          = try(each.value.network_security_group_name, null)
+  network_security_resource_group_name = try(
+    var.vnets[each.value.nsg_vnet_key].resource_group_name,
+    each.value.network_security_group_rg_name,
+    null
+  )
+  network_security_allow_source_ips = try(each.value.network_security_allow_source_ips, [])
+
+  frontend_ips = {
+    for k, v in each.value.frontend_ips : k => {
+      create_public_ip         = try(v.create_public_ip, false)
+      public_ip_name           = try(v.public_ip_name, null)
+      public_ip_resource_group = try(v.public_ip_resource_group, null)
+      private_ip_address       = try(v.private_ip_address, null)
+      subnet_id                = try(module.vnet[v.vnet_key].subnet_ids[v.subnet_key], null)
+      in_rules                 = try(v.in_rules, {})
+      out_rules                = try(v.out_rules, {})
+    }
+  }
+
+  tags       = var.tags
+  depends_on = [module.vnet]
+}
+
+
+
+
+# create the actual VMSeries VMs and resources
+module "ai" {
+  source = "../../modules/application_insights"
+
+  for_each = toset(
+    var.application_insights != null ? flatten(
+      try([var.application_insights.name], [for _, v in var.vmseries : "${v.name}-ai"])
+    ) : []
+  )
+
+  name                = "${var.name_prefix}${each.key}"
+  resource_group_name = local.resource_group.name
+  location            = var.location
+
+  workspace_mode            = try(var.application_insights.workspace_mode, null)
+  workspace_name            = try(var.application_insights.workspace_name, "${var.name_prefix}${each.key}-wrkspc")
+  workspace_sku             = try(var.application_insights.workspace_sku, null)
+  metrics_retention_in_days = try(var.application_insights.metrics_retention_in_days, null)
+
+  tags = var.tags
+}
+
 
 
 ## -- VNET peering and routing -- ##
@@ -125,6 +199,4 @@ module "vmseries" {
     azurerm_availability_set.this
   ]
 }
-
-
 
