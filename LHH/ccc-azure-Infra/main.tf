@@ -93,7 +93,8 @@ resource "azurerm_network_interface" "app-nic" {
   ip_configuration {
     name                          = "app-nic"
     subnet_id                     = azurerm_subnet.app-subnet01.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.112.1.4"
     public_ip_address_id          = azurerm_public_ip.app-vm-public_ip.id
   }
 }
@@ -134,7 +135,7 @@ os_profile {
   admin_password = coalesce(var.vm_password, random_password.this.result)
   computer_name  = "ccc-web-app"
   }
-  
+
  os_profile_linux_config {
     disable_password_authentication = false
   }
