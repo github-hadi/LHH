@@ -176,7 +176,7 @@ vmseries_vm_size = "Standard_DS3_v2"
 vmseries = {
  "fw-1" = {
    name              = "firewall01"
-   bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ___zMDnEffB1pazsEqB2xT9um069;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
+   bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
    vnet_key          = "transit"
    avzone            = 1
    interfaces = [
@@ -201,7 +201,7 @@ vmseries = {
  }
  "fw-2" = {
    name              = "firewall02"
-   bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=_AQ___zMDnEffB1pazsEqB2xT9um069;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
+   bootstrap_options = "type=dhcp-client;panorama-server=10.255.0.4;auth-key=;dgname=Azure Transit_DG;tplname=Azure Transit_TS;plugin-op-commands=panorama-licensing-mode-on;dhcp-accept-server-hostname=yes;dhcp-accept-server-domain=yes"
    vnet_key          = "transit"
    avzone            = 2
    interfaces = [
