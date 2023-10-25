@@ -171,7 +171,7 @@ load_balancers = {
 
 
 # --- VMSERIES PART --- #
-vmseries_version = "10.2.5"
+vmseries_version = "10.2.3"
 vmseries_vm_size = "Standard_DS3_v2"
 vmseries = {
  "fw-1" = {
