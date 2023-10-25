@@ -44,7 +44,7 @@ vnets = {
 }
 
 
-panorama_version = "10.2.3"
+panorama_version = "10.2.5"
 
 panoramas = {
   "pn-1" = {
