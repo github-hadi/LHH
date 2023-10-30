@@ -75,14 +75,7 @@ resource "azurerm_subnet_network_security_group_association" "app-subnet01-nsg" 
 }
 
 
-# app server 
-# create public IP address
-## resource "azurerm_public_ip" "app-vm-public_ip" {
-##   name                = "appPublicIP"
-##   location            = var.location
-##   resource_group_name = local.resource_group.name
-##   allocation_method   = "Dynamic"
-## }
+##CafeCoffeeCo Web-app server 
 
 # Create network interface
 resource "azurerm_network_interface" "app-nic" {
@@ -134,6 +127,7 @@ os_profile {
   admin_username      = "appadmin"
   admin_password = coalesce(var.vm_password, random_password.this.result)
   computer_name  = "ccc-web-app"
+  custom_data    = file("ccc-user-data.sh")
   }
 
  os_profile_linux_config {
