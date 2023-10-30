@@ -1,9 +1,9 @@
 #! /bin/bash
 sudo apt-get update
-sudo sleep 15s
-sudo apt-get install apache2
-sudo sleep 15s
-echo "<!DOCTYPE html>
+sudo sleep 10s
+sudo apt-get install -y apache2
+sudo sleep 10s
+echo '<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -88,4 +88,4 @@ echo "<!DOCTYPE html>
         &copy; 2023 Cafe Coffee Co
     </footer>
 </body>
-</html>" | sudo tee /var/www/html/index.html
+</html>' | sudo tee /var/www/html/index.html
