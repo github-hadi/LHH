@@ -1,1 +1,1 @@
-Securing CafeCoffeeCo's Azure testing infra structure with VM-Series firewalls
+Securing CafeCoffeeCo's Azure testing infrastructure with VM-Series firewalls
