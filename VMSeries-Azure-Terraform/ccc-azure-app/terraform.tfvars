@@ -8,7 +8,7 @@ img_offer = "0001-com-ubuntu-server-jammy"
 img_sku = "22_04-lts-gen2"
 img_version = "latest"
 tags = {
-  "owner"   = "hazadeh@paloaltonetworks.com"
+  "owner"   = "hadi zadeh"
   "CreatedWith" = "Terraform"
 }
 enable_zones = false
