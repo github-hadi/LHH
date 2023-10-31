@@ -5,7 +5,7 @@ name_prefix           = "ccc-"
 create_resource_group = true
 panorama_sku = "byol"
 tags = {
-  "owner"   = "hazadeh@paloaltonetworks.com"
+  "CreatedBy"   = "hadi zadeh"
   "CreatedWith" = "Terraform"
 }
 enable_zones = false

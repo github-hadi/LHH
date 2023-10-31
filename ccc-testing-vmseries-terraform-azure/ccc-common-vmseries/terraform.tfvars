@@ -3,7 +3,7 @@ location            = "Australia East"
 resource_group_name = "transit-rg"
 name_prefix         = "ccc-"
 tags = {
-  "owner"   = "hazadeh@paloaltonetworks.com"
+  "CreatedBy"   = "hadi zadeh"
   "CreatedWith" = "Terraform"
 }
 
