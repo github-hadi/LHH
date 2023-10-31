@@ -48,7 +48,7 @@
         <ip-netmask>10.112.1.4</ip-netmask>
       </entry>
       <entry name="public-lb-ip-address">
-        <ip-netmask>4.147.25.28</ip-netmask>
+        <ip-netmask>1.1.1.1</ip-netmask>
       </entry>
     </address>
   </shared>
